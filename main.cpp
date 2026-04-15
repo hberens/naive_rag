@@ -3,6 +3,7 @@
 #include "include/openFHE_wrapper.h"
 #include "openfhe.h"
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -133,13 +134,18 @@ int main(int argc, char *argv[]) {
     const size_t kMaxDbVectors = 50;
     const size_t db_size = (kMaxDbVectors == 0) ? embedding_database.size()
                                                 : std::min(kMaxDbVectors, embedding_database.size());
+    using Clock = std::chrono::steady_clock;
+    std::chrono::nanoseconds initDuration(0);
 
     /// PLAINTEXT APPROACH
+    const auto initSquaresStart = Clock::now();
     const float square_query_embedding = square(query_embedding);
     std::vector<float> square_embedding_database(db_size);
     for (size_t i = 0; i < db_size; i++) {
         square_embedding_database[i] = square(embedding_database[i]);
     }
+    initDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+        Clock::now() - initSquaresStart);
 
     std::vector<float> plaintext_distances(db_size);
     for (size_t i = 0; i < db_size; i++) {
@@ -180,6 +186,8 @@ int main(int argc, char *argv[]) {
 
 
     // ENCRYPTED APPROACH
+    const auto encryptedTotalStart = Clock::now();
+    const auto initEncryptedSetupStart = Clock::now();
     std::vector<double> query_embedding_d(query_embedding.begin(), query_embedding.end());
     padPackedSlots(query_embedding_d, batchSize);
     // Encrypt query embedding
@@ -194,7 +202,10 @@ int main(int argc, char *argv[]) {
     std::vector<float> distances(db_size);
     Plaintext ptMinusTwo = cc->MakeCKKSPackedPlaintext(std::vector<double>(batchSize, -2.0));
     std::vector<Ciphertext<DCRTPoly>> ctDistances(db_size);
+    initDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+        Clock::now() - initEncryptedSetupStart);
 
+    std::chrono::nanoseconds distanceCoreDuration(0);
     for (size_t i = 0; i < db_size; i++) {
 
         // printing progress for testing
@@ -213,6 +224,7 @@ int main(int argc, char *argv[]) {
         Ciphertext<DCRTPoly> ctInner = OpenFHEWrapper::sumAllSlots(cc, ctED);
 
         // -2<e,d>
+        const auto distanceCoreStart = Clock::now();
         Ciphertext<DCRTPoly> ctMinus2Inner = cc->EvalMult(ctInner, ptMinusTwo);
 
         // (||d||^2) as plaintext replicated across slots
@@ -222,6 +234,8 @@ int main(int argc, char *argv[]) {
         // Distance^2 = ||d||^2 + ||e||^2 - 2<e,d>
         Ciphertext<DCRTPoly> ctDist = cc->EvalAdd(ctMinus2Inner, ptD2);
         ctDist = cc->EvalAdd(ctDist, ptE2Slots);
+        distanceCoreDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+            Clock::now() - distanceCoreStart);
         ctDistances[i] = ctDist;
 
         // decrypt distance^2
@@ -249,6 +263,7 @@ int main(int argc, char *argv[]) {
     const double T = kSqDistanceThreshold;
     const double DIST_MAX = 1.0;
 
+    const auto thresholdStart = Clock::now();
     std::vector<Ciphertext<DCRTPoly>> distanceThresholds(db_size);
     for (size_t i = 0; i < db_size; i++) {
         // want to test if the distance is less than T 
@@ -263,6 +278,7 @@ int main(int argc, char *argv[]) {
         // change to 0 or 1 rather than 0 or 2
         distanceThresholds[i] = cc->EvalMult(ctStep, 0.5);
     }
+    const auto thresholdEnd = Clock::now();
 
     // decrypt the thresholds to read them to check results (soft value ≈ 0 or ≈ 1 before hard cut)
     std::vector<float> distanceThresholdsPT(db_size);
@@ -287,6 +303,22 @@ int main(int argc, char *argv[]) {
             out << i << "," << static_cast<int>(distanceThresholdsPT[i]) << "\n";
         }
     }
+    const auto encryptedTotalEnd = Clock::now();
+
+    const auto initMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(initDuration).count();
+    const auto distanceCalcMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(distanceCoreDuration).count();
+    const auto thresholdMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(thresholdEnd - thresholdStart).count();
+    const auto encryptedTotalMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(encryptedTotalEnd - encryptedTotalStart).count();
+
+    std::cout << "\nTiming summary (encrypted pipeline)\n";
+    std::cout << "  Running total (start -> encrypted output): " << encryptedTotalMs << " ms\n";
+    std::cout << "  Initialization (query encrypt + query/db squaring + -2 vector prep): " << initMs << " ms\n";
+    std::cout << "  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): " << distanceCalcMs << " ms\n";
+    std::cout << "  Thresholding: " << thresholdMs << " ms\n";
 
     // Compare plaintext vs encrypted threshold bits
     size_t threshold_matches = 0;
@@ -340,4 +372,25 @@ int main(int argc, char *argv[]) {
 // href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>.
 //  Also, you can try interactive lessons for CLion by selecting
 //  'Help | Learn IDE Features' from the main menu.
+
+// Timing metric:
+// 1) Running total (start -> encrypted output):
+//    Starts at encryptedTotalStart and ends at encryptedTotalEnd.
+//    Includes encrypted initialization, distance loop, threshold compute,
+//    threshold decrypt/hard-cut, and writing encrypted_thresholds.txt.
+//
+// 2) Initialization (query encrypt + query/db squaring + -2 vector prep):
+//    Accumulated initDuration from:
+//      - query and database squaring (square_query_embedding, square_embedding_database)
+//      - encrypted setup (query pack/encrypt, ptE2Slots, ptMinusTwo, pre-loop allocations)
+//
+// 3) Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt):
+//    Accumulated distanceCoreDuration inside the per-vector loop from
+//    right before EvalMult(ctInner, ptMinusTwo) through the two EvalAdd
+//    calls building ctDist
+//
+// 4) Thresholding:
+//    Starts at thresholdStart and ends at thresholdEnd
+//    Includes encrypted margin + Chebyshev compare + scaling by 0.5
+//    Excludes decrypting threshold ciphertexts and hard thresholding to 0/1
 
