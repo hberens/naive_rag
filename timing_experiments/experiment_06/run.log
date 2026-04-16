@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_06/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_06/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 55068 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 150 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 330 ms
+  Thresholding: 33693 ms
+Threshold agreement: 9 / 10 (90%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 1 Ivana Marie "Ivanka" Trump (; born October 30, 1981) is an American businesswoman. She is the second
+  ID: 4 The following is a list of American films released in 2024. The year featured a diverse array of cin
+  ID: 8 Richard "Dick" John Vitale (; born June 9, 1939), also known as "Dickie V", is an American basketbal
+  ID: 0 The Arizona–Arizona State football rivalry (also known as the Duel in the Desert) is a college footb
+  ID: 6 Dr. Seuss' How the Grinch Stole Christmas is a 2000 American Christmas fantasy comedy film directed 
+  ID: 5 Rachel Anne Zegler ( ; born May 3, 2001) is an American actress and singer. She gained wide recognit
+  ID: 2 Timothée Hal Chalamet ( ; born December 27, 1995) is an American and French actor. His accolades inc
+  ID: 9 Noah Timothy Beck (born May 4, 2001) is an American media personality and actor, widely known for hi
+  ID: 7 Charles Herbert Woolery (March 16, 1941 – November 23, 2024) was an American television host, actor,
+  ID: 3 On February 22, 2024, Laken Riley, a 22-year-old Augusta University nursing student, was murdered wh

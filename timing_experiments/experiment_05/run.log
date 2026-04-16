@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_05/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_05/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 68641 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 146 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 527 ms
+  Thresholding: 37791 ms
+Threshold agreement: 9 / 10 (90%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 8 John Heard Jr. (March 7, 1946 – July 21, 2017) was an American actor. Heard made his debut appearanc
+  ID: 5 Cole Kenneth Hauser (born March 22, 1975) is an American actor. He is known for film roles in "Highe
+  ID: 3 The Polar-Express is a 2004 American animated Christmas fantasy adventure film directed by Robert Ze
+  ID: 9 Belle Chrystall (25 April 1910 – 7 June 2003) was a British actress who appeared in a number of lead
+  ID: 0 LaNorris Sellers (born June 23, 2005) is an American college football quarterback for the South Caro
+  ID: 4 Daisy Jessica Edgar-Jones (born 24 May 1998) is an English actress. She began her career with the te
+  ID: 6 Lashana Lynch (born 27 November 1987) is a British actress. She first gained recognition for her rol
+  ID: 7 Sam Leavitt (born December 20, 2004) is an American football quarterback for the Arizona State Sun D
+  ID: 2 Gregory Maguire (born June 9, 1954) is an American novelist. He is the author of "Wicked", "Confessi
+  ID: 1 Thanksgiving is a federal holiday in the United States celebrated on the fourth Thursday of November

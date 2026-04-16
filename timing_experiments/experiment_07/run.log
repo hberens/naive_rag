@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_07/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_07/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 54115 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 140 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 312 ms
+  Thresholding: 33437 ms
+Threshold agreement: 9 / 10 (90%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 2 Max Emilian Verstappen (; born 30 September 1997) is a Dutch and Belgian racing driver, who competes
+  ID: 4 Syracuse University (informally 'Cuse or SU) is a private research university in Syracuse, New York,
+  ID: 8 Jennifer Grey (born March 26, 1960) is an American actress. She made her acting debut with the film 
+  ID: 6 Jodie Turner-Smith (born 7 September 1986) is a British actress. She made her feature film debut in 
+  ID: 1 Linda Edna Cardellini (born June 25, 1975) is an American actress. In television, she is known for h
+  ID: 9 The Lennon Sisters are an American vocal group that has been made up, at one time or another, of thr
+  ID: 5 Furman University is a private university in Greenville, South Carolina, United States. Founded in 1
+  ID: 3 Michael James Way (born September 10, 1980) is an American musician and songwriter, best known as th
+  ID: 7 Mikaela Mikey Madison Rosberg (born March 25, 1999) is an American actress. She began her career act
+  ID: 0 John Fitzgerald Kennedy (May 29, 1917 – November 22, 1963), also known as JFK, was the 35th presiden

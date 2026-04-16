@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_04/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_04/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 69085 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 151 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 536 ms
+  Thresholding: 38107 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 3 Oppenheimer is a 2023 epic biographical thriller film written, produced, and directed by Christopher
+  ID: 2 James Geoffrey Franklin (born February 2, 1972) is an American football coach and former player. Fra
+  ID: 8 Cailee Spaeny (; born July 24, 1998) is an American actress. Her first major roles were in the scien
+  ID: 5 Dakota Mayi Johnson (born October 4, 1989) is an American actress. The daughter of actors Don Johnso
+  ID: 4 Catherine Anne O'Hara (born March 4, 1954) is a Canadian-American actress, comedian, and screenwrite
+  ID: 1 I'm a Celebrity...Get Me Out of Here! (often shortened to I'm a Celebrity or I'm a Celeb) is a Briti
+  ID: 6 The 2024 NBA Cup was a multi-stage basketball tournament played during the 2024–25 NBA season. It wa
+  ID: 0 Charles Kushner (born May 16, 1954) is an American real estate developer and disbarred attorney who 
+  ID: 7 Shetland is a Scottish crime drama television series produced by ITV Studios for BBC Scotland. First
+  ID: 9 Dune is an American science fiction media franchise that originated with the 1965 novel "Dune" by Fr

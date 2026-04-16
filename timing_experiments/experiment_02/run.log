@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_02/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_02/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 68901 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 146 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 585 ms
+  Thresholding: 38097 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 0 Elisabeth (born Duchess Elisabeth Amalie Eugenie in Bavaria; 24 December 1837 – 10 September 1898), 
+  ID: 6 How to Train Your Dragon is a 2025 American fantasy film produced, written, and directed by Dean DeB
+  ID: 8 Mary William Ethelbert Appleton "Billie" Burke (August 7, 1884 – May 14, 1970) was an American actre
+  ID: 5 Slow Horses is a British spy thriller television series based on the "Slough House" series of novels
+  ID: 1 Henry Earl Holliman (September 11, 1928 – November 25, 2024) was an American actor, animal rights ac
+  ID: 7 Accused is an American crime drama anthology television series developed by Howard Gordon that is ba
+  ID: 9 Catherine Élise Blanchett ( ; born 14 May 1969) is an Australian actor and producer. Regarded as one
+  ID: 2 A Man on the Inside is an American comedy television series created by Michael Schur and starring Te
+  ID: 3 Demi Bennett (born 11 October 1996) is an Australian professional wrestler. As of July 2017, she is 
+  ID: 4 Blitz is a 2024 historical war drama film written, produced and directed by Steve McQueen. The film 

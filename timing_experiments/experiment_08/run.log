@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_08/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_08/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 54485 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 141 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 315 ms
+  Thresholding: 33663 ms
+Threshold agreement: 9 / 10 (90%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 2 The Hunt is a 2020 American action horror film directed by Craig Zobel and written by Nick Cuse and 
+  ID: 9 Hamish James Hawk (born October 27, 1991) is a Scottish musician. Hawk began his career in 2012 whil
+  ID: 5 The Count of Monte Cristo (French: Le Comte de Monte-Cristo) is a 2024 French historical action adve
+  ID: 8 The Copa Libertadores is a seasonal association football competition that was established in 1960. I
+  ID: 6 The Campeonato Brasileiro Série A (; English: "Brazilian Championship A Series"), commonly referred 
+  ID: 7 Justin Scott Hartley (born January 29, 1977) is an American actor, television producer, and director
+  ID: 3 Interior Chinatown (stylized onscreen as INT. CHINATOWN) is an American action comedy-drama televisi
+  ID: 4 Ciaran Mullooly (born 4 September 1966) is an Irish Independent Ireland politician who has served as
+  ID: 0 Cynthia Chinasaokwu Onyedinmanasu Amarachukwu Owezuke Echimino Erivo ( ; born 8 January 1987) is a B
+  ID: 1 Oscar Zoroaster Phadrig Isaac Norman Henkle Emmannuel Ambroise Diggs, better known as the "Wizard of

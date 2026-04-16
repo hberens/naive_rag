@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_03/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_03/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 21, batch size = 32768)
+Configured DB size: 10
+Distance threshold: 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 68624 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 151 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 532 ms
+  Thresholding: 37696 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 6 Justin Sun (; born July 30, 1990) is a Chinese-born cryptocurrency entrepreneur and business executi
+  ID: 5 Outlander is a historical drama television series based on the book series of the same name by Diana
+  ID: 1 Saint Andrew's Day, also called the Feast of Saint Andrew or Andermas, is the feast day of Andrew th
+  ID: 2 Harshad Shantilal Mehta (29 July 1954 – 31 December 2001) was an Indian stockbroker, businessman, an
+  ID: 3 Sarah Margaret Qualley ( ; born October 23, 1994) is an American actress. A daughter of actress Andi
+  ID: 9 Paul David Heaton (born 9 May 1962) is an English singer-songwriter. He was the lead singer and main
+  ID: 7 Gaius Caesar Augustus Germanicus (31 August 12 – 24 January 41), also called Gaius and Caligula (), 
+  ID: 0 Robert Cory Bryar (December 31, 1979 – November 24, 2024) was an American musician and sound enginee
+  ID: 4 Bowen Yang (born November 6, 1990) is an American actor, comedian, podcaster, and writer. Yang was h
+  ID: 8 Gaius Julius Caesar Augustus (born Gaius Octavius; 23 September 63 BC – 19 August AD 14), also known

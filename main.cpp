@@ -134,6 +134,7 @@ int main(int argc, char *argv[]) {
     const size_t kMaxDbVectors = 50;
     const size_t db_size = (kMaxDbVectors == 0) ? embedding_database.size()
                                                 : std::min(kMaxDbVectors, embedding_database.size());
+    std::cout << "Configured DB size: " << db_size << std::endl;
     using Clock = std::chrono::steady_clock;
     std::chrono::nanoseconds initDuration(0);
 
@@ -167,6 +168,7 @@ int main(int argc, char *argv[]) {
 
     // plaintext thresholding
     const double kSqDistanceThreshold = 0.61;
+    std::cout << "Distance threshold: " << kSqDistanceThreshold << std::endl;
     std::vector<float> plaintext_threshold_bits(db_size);
     for (size_t i = 0; i < db_size; i++) {
         plaintext_threshold_bits[i] =
