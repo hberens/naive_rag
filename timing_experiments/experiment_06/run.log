@@ -15,11 +15,11 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 55068 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 150 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 330 ms
-  Thresholding: 33693 ms
-Threshold agreement: 9 / 10 (90%)
+  Running total (start -> encrypted output): 54364 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 135 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 322 ms
+  Thresholding: 33653 ms
+Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 1 Ivana Marie "Ivanka" Trump (; born October 30, 1981) is an American businesswoman. She is the second
-  ID: 4 The following is a list of American films released in 2024. The year featured a diverse array of cin
-  ID: 8 Richard "Dick" John Vitale (; born June 9, 1939), also known as "Dickie V", is an American basketbal
-  ID: 0 The Arizona–Arizona State football rivalry (also known as the Duel in the Desert) is a college footb
-  ID: 6 Dr. Seuss' How the Grinch Stole Christmas is a 2000 American Christmas fantasy comedy film directed 
-  ID: 5 Rachel Anne Zegler ( ; born May 3, 2001) is an American actress and singer. She gained wide recognit
-  ID: 2 Timothée Hal Chalamet ( ; born December 27, 1995) is an American and French actor. His accolades inc
-  ID: 9 Noah Timothy Beck (born May 4, 2001) is an American media personality and actor, widely known for hi
-  ID: 7 Charles Herbert Woolery (March 16, 1941 – November 23, 2024) was an American television host, actor,
-  ID: 3 On February 22, 2024, Laken Riley, a 22-year-old Augusta University nursing student, was murdered wh
+  ID: 8 William Cullen Hart (June 14, 1971 – November 29, 2024) was an American musician, singer, songwriter
+  ID: 1 Mario Manuel Cristobal (born September 24, 1970) is an American college football coach who is the he
+  ID: 5 Major General Maher Hafez al-Assad (, born 8 December 1967) is a Syrian former military officer who 
+  ID: 4 Constantine ( ) is a 2005 American supernatural film directed by Francis Lawrence in his directorial
+  ID: 7 Bonnie Bedelia (born Bonnie Bedelia Culkin; March 25, 1948) is an American actress. After beginning 
+  ID: 2 Henry William Dalgliesh Cavill ( ; born 5 May 1983) is a British actor. He gained worldwide recognit
+  ID: 9 The Labour Party (, ) is a centre-left and social democratic political party in the Republic of Irel
+  ID: 0 Jonathan Stuart Bailey (born 25 April 1988) is an English actor known for his dramatic, comedic, and
+  ID: 3 Barry Hawkins (born 23 April 1979) is an English professional snooker player from Ditton, Kent. He t
+  ID: 6 Zoë Kravitz (born December 1, 1988) is an American actress and filmmaker. She made her acting debut 

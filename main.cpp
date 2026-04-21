@@ -167,12 +167,28 @@ int main(int argc, char *argv[]) {
     }
 
     // plaintext thresholding
-    const double kSqDistanceThreshold = 0.61;
+    // Compare in similarity space for clearer threshold semantics:
+    // sim = 1 - (d^2 / 2), then sim >= MATCH_THRESHOLD.
+    double kSqDistanceThreshold = 2.0 * (1.0 - MATCH_THRESHOLD);
+    if (kSqDistanceThreshold < 0.0) {
+        kSqDistanceThreshold = 0.0;
+    } else if (kSqDistanceThreshold > 4.0) {
+        kSqDistanceThreshold = 4.0;
+    }
+    std::cout << "Similarity threshold: " << MATCH_THRESHOLD << std::endl;
     std::cout << "Distance threshold: " << kSqDistanceThreshold << std::endl;
+    std::vector<float> plaintext_similarity_scores(db_size);
     std::vector<float> plaintext_threshold_bits(db_size);
     for (size_t i = 0; i < db_size; i++) {
+        double similarity = 1.0 - static_cast<double>(plaintext_distances[i]) / 2.0;
+        if (similarity < -1.0) {
+            similarity = -1.0;
+        } else if (similarity > 1.0) {
+            similarity = 1.0;
+        }
+        plaintext_similarity_scores[i] = static_cast<float>(similarity);
         plaintext_threshold_bits[i] =
-            static_cast<double>(plaintext_distances[i]) < kSqDistanceThreshold ? 1.0f : 0.0f;
+            static_cast<double>(plaintext_similarity_scores[i]) >= MATCH_THRESHOLD ? 1.0f : 0.0f;
     }
     // add to file 
     {
@@ -261,28 +277,22 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Chebyshev thresholding
-    const double T = kSqDistanceThreshold;
-    const double DIST_MAX = 1.0;
-
+    // Chebyshev thresholding in similarity space (same decision rule as plaintext):
+    // sim = 1 - (d^2 / 2), compare sim against MATCH_THRESHOLD.
     const auto thresholdStart = Clock::now();
     std::vector<Ciphertext<DCRTPoly>> distanceThresholds(db_size);
     for (size_t i = 0; i < db_size; i++) {
-        // want to test if the distance is less than T 
-        // margin = (T - dist) / DIST_MAX
-        // now we can test if the margin is greater than 0
-        Ciphertext<DCRTPoly> ctMargin = cc->EvalMult(ctDistances[i], -1.0 / DIST_MAX); // -(dist/DIST_MAX)
-        cc->EvalAddInPlace(ctMargin, T / DIST_MAX);     // since chebyshevCompare is set up on [-1. 1]                                 // +(T/DIST_MAX)
+        Ciphertext<DCRTPoly> ctSimilarity = cc->EvalMult(ctDistances[i], -0.5);
+        cc->EvalAddInPlace(ctSimilarity, 1.0);
 
-        // step ≈ 0 if margin < 0, else ≈ 2
-        Ciphertext<DCRTPoly> ctStep = OpenFHEWrapper::chebyshevCompare(cc, ctMargin, 0.0, COMP_DEPTH);
-
-        // change to 0 or 1 rather than 0 or 2
-        distanceThresholds[i] = cc->EvalMult(ctStep, 0.5);
+        // step ≈ 0 if sim < MATCH_THRESHOLD, else ≈ 2
+        Ciphertext<DCRTPoly> ctStep =
+            OpenFHEWrapper::chebyshevCompare(cc, ctSimilarity, MATCH_THRESHOLD, COMP_DEPTH);
+        distanceThresholds[i] = ctStep;
     }
     const auto thresholdEnd = Clock::now();
 
-    // decrypt the thresholds to read them to check results (soft value ≈ 0 or ≈ 1 before hard cut)
+    // decrypt the thresholds to read them to check results (soft value ≈ 0 or ≈ 2 before hard cut)
     std::vector<float> distanceThresholdsPT(db_size);
     for (size_t i = 0; i < db_size; i++) {
         Plaintext ptInd;
@@ -291,7 +301,7 @@ int main(int argc, char *argv[]) {
 
         const auto vals = ptInd->GetRealPackedValue();
         const double v = vals.empty() ? 0.0 : vals[0];
-        distanceThresholdsPT[i] = static_cast<float>(v > 0.5 ? 1.0 : 0.0);
+        distanceThresholdsPT[i] = static_cast<float>(v > 1.0 ? 1.0 : 0.0);
     }
 
     // save encrypted thresholds to file

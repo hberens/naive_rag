@@ -17,6 +17,7 @@ import random
 import re
 import subprocess
 import sys
+import shutil
 from pathlib import Path
 
 import faiss
@@ -85,13 +86,24 @@ def parse_args() -> argparse.Namespace:
         "--pool-size",
         type=int,
         default=1000,
-        help="Only sample from the first N vectors of the source index/database.",
+        help="Sample from N vectors starting at --pool-start.",
+    )
+    parser.add_argument(
+        "--pool-start",
+        type=int,
+        default=0,
+        help="Start index for sampling pool (inclusive).",
     )
     parser.add_argument(
         "--seed",
         type=int,
         default=123,
         help="Random seed used to form the experiment sets.",
+    )
+    parser.add_argument(
+        "--clean-output",
+        action="store_true",
+        help="Delete existing experiment_* folders in output dir before running.",
     )
     return parser.parse_args()
 
@@ -128,6 +140,25 @@ def parse_metrics(stdout: str) -> dict[str, float | int]:
     return metrics
 
 
+def require_metrics(metrics: dict[str, float | int], experiment_id: int, log_path: Path) -> None:
+    required = (
+        "encrypted_total_ms",
+        "initialization_ms",
+        "distance_calc_ms",
+        "threshold_ms",
+        "vector_count",
+        "vector_dimension",
+        "configured_db_size",
+        "distance_threshold",
+    )
+    missing = [key for key in required if key not in metrics]
+    if missing:
+        raise RuntimeError(
+            f"Experiment {experiment_id} missing metrics {missing}. "
+            f"Check log format in {log_path}."
+        )
+
+
 def main() -> int:
     args = parse_args()
 
@@ -147,17 +178,29 @@ def main() -> int:
         raise FileNotFoundError(f"Database file not found: {database_path}")
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    if args.clean_output:
+        for stale_dir in output_dir.glob("experiment_*"):
+            if stale_dir.is_dir():
+                shutil.rmtree(stale_dir)
 
     source_index = faiss.read_index(str(index_path))
     database_lines = read_database_lines(database_path)
-    available_pool = min(args.pool_size, source_index.ntotal, len(database_lines))
+    max_pool_size = min(source_index.ntotal, len(database_lines))
+    if args.pool_start < 0:
+        raise ValueError("--pool-start must be >= 0")
+    if args.pool_start >= max_pool_size:
+        raise ValueError(
+            f"--pool-start ({args.pool_start}) exceeds available vectors ({max_pool_size})."
+        )
+    available_pool = min(args.pool_size, max_pool_size - args.pool_start)
     requested_total = args.experiments * args.set_size
     if requested_total > available_pool:
         raise ValueError(
-            f"Need {requested_total} vectors for disjoint experiments, but only {available_pool} are available."
+            f"Need {requested_total} vectors for disjoint experiments, but only {available_pool} are available "
+            f"in range [{args.pool_start}, {args.pool_start + available_pool})."
         )
 
-    shuffled_indices = list(range(available_pool))
+    shuffled_indices = list(range(args.pool_start, args.pool_start + available_pool))
     random.Random(args.seed).shuffle(shuffled_indices)
 
     results: list[dict[str, object]] = []
@@ -206,14 +249,15 @@ def main() -> int:
                 f"See {log_path}."
             )
 
-        metrics = parse_metrics(completed.stdout)
+        metrics = parse_metrics(log_path.read_text(encoding="utf-8"))
+        require_metrics(metrics, experiment_id, log_path)
         row = {
             "experiment_id": experiment_id,
             "selected_indices": ",".join(str(idx) for idx in selected_indices),
             "vector_count": metrics.get("vector_count", args.set_size),
             "configured_db_size": metrics.get("configured_db_size", args.set_size),
             "vector_dimension": metrics.get("vector_dimension", ""),
-            "distance_threshold": metrics.get("distance_threshold", 0.61),
+            "distance_threshold": metrics.get("distance_threshold", 0.60),
             "encrypted_total_ms": metrics.get("encrypted_total_ms", ""),
             "initialization_ms": metrics.get("initialization_ms", ""),
             "distance_calc_ms": metrics.get("distance_calc_ms", ""),
@@ -235,6 +279,7 @@ def main() -> int:
         writer.writerows(results)
 
     print(f"Wrote {csv_path}")
+    print(f"Pool range used: [{args.pool_start}, {args.pool_start + available_pool})")
     return 0
 
 

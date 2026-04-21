@@ -15,10 +15,10 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 69085 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 151 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 536 ms
-  Thresholding: 38107 ms
+  Running total (start -> encrypted output): 53963 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 134 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 313 ms
+  Thresholding: 33408 ms
 Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 3 Oppenheimer is a 2023 epic biographical thriller film written, produced, and directed by Christopher
-  ID: 2 James Geoffrey Franklin (born February 2, 1972) is an American football coach and former player. Fra
-  ID: 8 Cailee Spaeny (; born July 24, 1998) is an American actress. Her first major roles were in the scien
-  ID: 5 Dakota Mayi Johnson (born October 4, 1989) is an American actress. The daughter of actors Don Johnso
-  ID: 4 Catherine Anne O'Hara (born March 4, 1954) is a Canadian-American actress, comedian, and screenwrite
-  ID: 1 I'm a Celebrity...Get Me Out of Here! (often shortened to I'm a Celebrity or I'm a Celeb) is a Briti
-  ID: 6 The 2024 NBA Cup was a multi-stage basketball tournament played during the 2024–25 NBA season. It wa
-  ID: 0 Charles Kushner (born May 16, 1954) is an American real estate developer and disbarred attorney who 
-  ID: 7 Shetland is a Scottish crime drama television series produced by ITV Studios for BBC Scotland. First
-  ID: 9 Dune is an American science fiction media franchise that originated with the 1965 novel "Dune" by Fr
+  ID: 0 Ethan Samuel Slater (born June 2, 1992) is an American actor and singer. He played the character of 
+  ID: 9 Jesse Woodson James (September 5, 1847April 3, 1882) was an American outlaw, bank and train robber, 
+  ID: 2 Justin Dean Kluivert (born 5 May 1999) is a Dutch professional footballer who plays as a winger or f
+  ID: 8 Sophia Anna Bush (born July 8, 1982) is an American actress. She starred as Brooke Davis in The WB/C
+  ID: 4 Emily Olivia Laura Blunt (born 23 February 1983) is a British actress. She is the recipient of sever
+  ID: 1 Matt Eberflus ( ; born May 17, 1970) is an American professional football coach who is the defensive
+  ID: 3 Alexander Nahuel Barboza Ullúa (born 16 March 1995) is a professional footballer who plays as a cent
+  ID: 6 Bill Istvan Günther Skarsgård (; born 9 August 1990) is a Swedish actor. He is known for portraying 
+  ID: 7 Samuel Hartman (born July 29, 1999) is an American professional football quarterback for the Washing
+  ID: 5 The family of Donald Trump, the 45th and 47th president of the United States and owner of the Trump 

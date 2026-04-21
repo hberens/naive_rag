@@ -15,10 +15,10 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 68662 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 145 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 541 ms
-  Thresholding: 37834 ms
+  Running total (start -> encrypted output): 54204 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 139 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 311 ms
+  Thresholding: 33511 ms
 Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 8 Madonna Louise Ciccone ( ; born August 16, 1958) is an American singer, songwriter, record producer,
-  ID: 9 Jonathan Gregory Brandis (April 13, 1976 – November 12, 2003) was an American actor. Beginning his c
-  ID: 1 Adolf Hitler (20 April 1889 – 30 April 1945) was an Austrian-born German politician who was the dict
-  ID: 6 The sixth and final season of "Cobra Kai", also known as Cobra Kai VI, consists of 15 episodes and w
-  ID: 3 Joy is a 2024 British biographical drama film starring Bill Nighy, Thomasin McKenzie and James Norto
-  ID: 5 Jason Bradley DeFord (born December 4, 1984), known professionally as Jelly Roll (originally stylize
-  ID: 7 Joshua Samuel Fatu (born August 22, 1985) is an American professional wrestler. He is signed to WWE,
-  ID: 0 Deion Luwynn Sanders Sr. (born August 9, 1967) is an American football coach and former player who i
-  ID: 4 Jeremiyah Darnell Love (born May 31, 2005) is an American college football running back for the Notr
-  ID: 2 Youngtown is a town in Maricopa County, Arizona, United States. As of the 2020 census, the populatio
+  ID: 5 Dino Sean Babers (born July 19, 1961) is an American football coach. He was most recently the offens
+  ID: 9 Toto is an American rock band formed in Los Angeles, California, in 1977. Toto combines elements of 
+  ID: 8 Joseph Frank Pesci ( , ; born February 9, 1943) is an American actor, comedian, and musician. He is 
+  ID: 4 Thomas Frank (; born 9 October 1973) is a Danish professional football coach and former amateur play
+  ID: 7 Jeremiyah Darnell Love (born May 31, 2005) is an American college football running back for the Notr
+  ID: 1 Michael George Vrabel ( ; born August 14, 1975) is an American professional football coach and forme
+  ID: 2 Fianna Fáil ( ; ; meaning "Soldiers of Destiny" or "Warriors of Fál"), officially Fianna Fáil – The 
+  ID: 3 Katherine Victoria Litwack (born June 13, 1986), known professionally as Kat Dennings, is an America
+  ID: 6 Heath Andrew Ledger (4 April 1979 – 22 January 2008) was an Australian actor. After playing roles in
+  ID: 0 Emmanuel Forbes Jr. (born January 13, 2001) is an American professional football cornerback for the 
