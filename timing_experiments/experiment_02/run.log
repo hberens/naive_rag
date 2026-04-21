@@ -15,10 +15,10 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 54085 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 135 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 314 ms
-  Thresholding: 33495 ms
+  Running total (start -> encrypted output): 54510 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 147 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 315 ms
+  Thresholding: 33945 ms
 Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 1 Will Howard (born September 24, 2001) is an American football quarterback for the Ohio State Buckeye
-  ID: 8 Fyodor Mikhailovich Dostoevsky () was a Russian novelist, short story writer, essayist and journalis
-  ID: 9 Mara Elizabeth Wilson (born July 24, 1987) is an American actress. As a child, she played Natalie Hi
-  ID: 2 Quinn Tucker Ewers (born March 15, 2003) is an American football quarterback. He played college foot
-  ID: 3 Alain Marie Pascal Prost (; born 24 February 1955) is a French former racing driver and motorsport e
-  ID: 5 Kristoffer Kristofferson (June 22, 1936 – September 28, 2024) was an American singer, songwriter, an
-  ID: 6 Justin Robert Currie (born 11 December 1964) is a Scottish singer and songwriter best known as a fou
-  ID: 0 Jayden Ikaika Maiava is an American college football quarterback for the USC Trojans. He previously 
-  ID: 7 The Heisman Memorial Trophy ( ; also known simply as the Heisman) is awarded annually since 1935 to 
-  ID: 4 Chadwick Aaron Boseman (; November 29, 1976August 28, 2020) was an American actor. Through his two-d
+  ID: 0 Elisabeth (born Duchess Elisabeth Amalie Eugenie in Bavaria; 24 December 1837 – 10 September 1898), 
+  ID: 6 How to Train Your Dragon is a 2025 American fantasy film produced, written, and directed by Dean DeB
+  ID: 8 Mary William Ethelbert Appleton "Billie" Burke (August 7, 1884 – May 14, 1970) was an American actre
+  ID: 5 Slow Horses is a British spy thriller television series based on the "Slough House" series of novels
+  ID: 1 Henry Earl Holliman (September 11, 1928 – November 25, 2024) was an American actor, animal rights ac
+  ID: 7 Accused is an American crime drama anthology television series developed by Howard Gordon that is ba
+  ID: 9 Catherine Élise Blanchett ( ; born 14 May 1969) is an Australian actor and producer. Regarded as one
+  ID: 2 A Man on the Inside is an American comedy television series created by Michael Schur and starring Te
+  ID: 3 Demi Bennett (born 11 October 1996) is an Australian professional wrestler. As of July 2017, she is 
+  ID: 4 Blitz is a 2024 historical war drama film written, produced and directed by Steve McQueen. The film 

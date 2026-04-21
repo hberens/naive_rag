@@ -15,11 +15,11 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 54182 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 139 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 319 ms
-  Thresholding: 33300 ms
-Threshold agreement: 10 / 10 (100%)
+  Running total (start -> encrypted output): 53953 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 134 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 316 ms
+  Thresholding: 33364 ms
+Threshold agreement: 9 / 10 (90%)
 Number of solutions 0
 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 5 Sarah Hadland (born 15 May 1971) is an English actress. She is best known for her role as Stevie Sut
-  ID: 8 Bradley Ray Nessler (born June 3, 1956) is an American sportscaster, who currently calls college foo
-  ID: 0 Gionna Daddio (born June 8, 1994) is an American professional wrestler and actress. She is signed to
-  ID: 4 Julie Bowen (born Julie Bowen Luetkemeyer; March 3, 1970) is an American actress. She is best known 
-  ID: 1 Wordle is a web-based word game created and developed by Welsh software engineer Josh Wardle. In the
-  ID: 2 Interstellar is a 2014 epic science fiction film directed by Christopher Nolan, who co-wrote the scr
-  ID: 3 Presidential elections were held in Romania on 24 November 2024. A second round was due to be held o
-  ID: 9 Lalisa Manobal (; born Pranpriya Manobal, March 27, 1997), known mononymously as Lisa (), is a Thai 
-  ID: 6 Alien is a science fiction horror and action media franchise centered on the original film series wh
-  ID: 7 Shetland is a Scottish crime drama television series produced by ITV Studios for BBC Scotland. First
+  ID: 8 John Heard Jr. (March 7, 1946 – July 21, 2017) was an American actor. Heard made his debut appearanc
+  ID: 5 Cole Kenneth Hauser (born March 22, 1975) is an American actor. He is known for film roles in "Highe
+  ID: 3 The Polar-Express is a 2004 American animated Christmas fantasy adventure film directed by Robert Ze
+  ID: 9 Belle Chrystall (25 April 1910 – 7 June 2003) was a British actress who appeared in a number of lead
+  ID: 0 LaNorris Sellers (born June 23, 2005) is an American college football quarterback for the South Caro
+  ID: 4 Daisy Jessica Edgar-Jones (born 24 May 1998) is an English actress. She began her career with the te
+  ID: 6 Lashana Lynch (born 27 November 1987) is a British actress. She first gained recognition for her rol
+  ID: 7 Sam Leavitt (born December 20, 2004) is an American football quarterback for the Arizona State Sun D
+  ID: 2 Gregory Maguire (born June 9, 1954) is an American novelist. He is the author of "Wicked", "Confessi
+  ID: 1 Thanksgiving is a federal holiday in the United States celebrated on the fourth Thursday of November

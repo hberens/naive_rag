@@ -15,11 +15,11 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 54683 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 138 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 317 ms
-  Thresholding: 33959 ms
-Threshold agreement: 10 / 10 (100%)
+  Running total (start -> encrypted output): 54861 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 142 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 320 ms
+  Thresholding: 33913 ms
+Threshold agreement: 9 / 10 (90%)
 Number of solutions 0
 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 8 Andrew Fetterly Wilkes-Krier (born May 9, 1979), known professionally as Andrew W.K., is an American
-  ID: 3 Diane Lane (born January 22, 1965) is an American actress. She made her motion-picture debut in Geor
-  ID: 5 Lawrence Welk (March 11, 1903 – May 17, 1992) was an American accordionist, bandleader, and televisi
-  ID: 4 The Rock is a 1996 American action thriller film directed by Michael Bay, produced by Don Simpson an
-  ID: 9 1992 is a 2024 American heist thriller film directed by Ariel Vromen and written by Sascha Penn and 
-  ID: 6 Andrew the Apostle ( ; ; ; ) was an apostle of Jesus. According to the New Testament, he was a fishe
-  ID: 0 The Syrian Democratic Forces (SDF) is a Kurdish-led coalition of U.S.-backed left-wing ethnic militi
-  ID: 1 Spellbound is a 2024 American animated musical fantasy comedy film directed by Vicky Jenson and co-d
-  ID: 2 Timothée Hal Chalamet ( ; born December 27, 1995) is an American and French actor. His accolades inc
-  ID: 7 Thiago Ezequiel Almada (born 26 April 2001) is an Argentine professional footballer who plays as an 
+  ID: 2 The Hunt is a 2020 American action horror film directed by Craig Zobel and written by Nick Cuse and 
+  ID: 9 Hamish James Hawk (born October 27, 1991) is a Scottish musician. Hawk began his career in 2012 whil
+  ID: 5 The Count of Monte Cristo (French: Le Comte de Monte-Cristo) is a 2024 French historical action adve
+  ID: 8 The Copa Libertadores is a seasonal association football competition that was established in 1960. I
+  ID: 6 The Campeonato Brasileiro Série A (; English: "Brazilian Championship A Series"), commonly referred 
+  ID: 7 Justin Scott Hartley (born January 29, 1977) is an American actor, television producer, and director
+  ID: 3 Interior Chinatown (stylized onscreen as INT. CHINATOWN) is an American action comedy-drama televisi
+  ID: 4 Ciaran Mullooly (born 4 September 1966) is an Irish Independent Ireland politician who has served as
+  ID: 0 Cynthia Chinasaokwu Onyedinmanasu Amarachukwu Owezuke Echimino Erivo ( ; born 8 January 1987) is a B
+  ID: 1 Oscar Zoroaster Phadrig Isaac Norman Henkle Emmannuel Ambroise Diggs, better known as the "Wizard of

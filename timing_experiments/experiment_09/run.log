@@ -15,11 +15,11 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 54079 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 141 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 312 ms
-  Thresholding: 33517 ms
-Threshold agreement: 9 / 10 (90%)
+  Running total (start -> encrypted output): 54894 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 137 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 316 ms
+  Thresholding: 34117 ms
+Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 6 The Hunt is a 2020 American action horror film directed by Craig Zobel and written by Nick Cuse and 
-  ID: 0 Twisters is a 2024 American disaster film directed by Lee Isaac Chung from a screenplay by Mark L. S
-  ID: 3 Syracuse University (informally 'Cuse or SU) is a private research university in Syracuse, New York,
-  ID: 9 Bronson Rechsteiner (born October 24, 1997) is an American professional wrestler and former football
-  ID: 5 Casualties in the Russo-Ukrainian War include six deaths during the 2014 annexation of Crimea by the
-  ID: 4 Jake Steinfeld (born February 21, 1958) is an American actor, fitness personality, entrepreneur, and
-  ID: 1 Joshua Kushner (born June 12, 1985) is an American businessman and investor. He is the founder and m
-  ID: 2 The Ohio State Buckeyes college football team represents the Ohio State University in the East Divis
-  ID: 8 Matthew Wayne Shepard (December 1, 1976 – October 12, 1998) was an American student at the Universit
-  ID: 7 Kevin Hanchard (born July 4, 1974) is a Canadian actor, best known for his roles as Detective Arthur
+  ID: 3 Aubrey Christina Plaza (born June 26, 1984) is an American actress, comedian, and producer. She bega
+  ID: 1 Mikaela Pauline Shiffrin (born March 13, 1995) is an American World Cup alpine skier who has the mos
+  ID: 9 This is a list of chocolate bar brands, in alphabetical order, including discontinued brands. A choc
+  ID: 5 Damien Martinez (born January 31, 2004) is an American football running back who currently plays for
+  ID: 4 Longlegs is a 2024 American horror thriller film written and directed by Osgood Perkins and starring
+  ID: 0 Coleen Mary Rooney ( McLoughlin; born 3 April 1986) is an English media personality. She is married 
+  ID: 8 Superman is an upcoming American superhero film based on the eponymous character from DC Comics. Pro
+  ID: 6 James Matthew Dewees (born March 13, 1976) is an American musician best known for his work with The 
+  ID: 2 Wentworth Earl Miller III (born June 2, 1972) is an American actor known as Michael Scofield in "Pri
+  ID: 7 Peter James Wicks (born 1 November 1988) is an English television personality who was a cast member 

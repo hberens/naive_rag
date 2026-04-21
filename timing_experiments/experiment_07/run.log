@@ -15,11 +15,11 @@ Distance threshold: 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 54543 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 135 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 317 ms
-  Thresholding: 33514 ms
-Threshold agreement: 10 / 10 (100%)
+  Running total (start -> encrypted output): 54353 ms
+  Initialization (query encrypt + query/db squaring + -2 vector prep): 136 ms
+  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 311 ms
+  Thresholding: 33490 ms
+Threshold agreement: 9 / 10 (90%)
 Number of solutions 0
 0
 0
@@ -33,13 +33,13 @@ Number of solutions 0
 0
 
 Top 10 nearest neighbors:
-  ID: 5 John Joseph Haley Jr. (August 10, 1898 – June 6, 1979) was an American actor, comedian, dancer, radi
-  ID: 0 Ryan Patrick Day (born March 12, 1979) is an American football coach and former college football pla
-  ID: 6 December is the twelfth and final month of the year in the Julian and Gregorian calendars. Its lengt
-  ID: 7 Elizabeth "Lee" Miller, Lady Penrose (April 23, 1907 – July 21, 1977), was an American photographer 
-  ID: 8 Sven Magnus Øen Carlsen (born 30 November 1990) is a Norwegian chess grandmaster. Carlsen is a five-
-  ID: 3 Wedding Anniversary is an Indian Hindi-language romantic drama film, directed by Shekhar S Jha, prod
-  ID: 9 Matlock is an American legal drama television series that premiered with a sneak peek on September 2
-  ID: 1 Nutcrackers is a 2024 American comedy drama film directed by David Gordon Green, written by Leland D
-  ID: 2 The 2024 Melon Music Awards (), part of the Melon Music Awards series, was an awards ceremony held o
-  ID: 4 John Charles Textor (born September 30, 1965) is an American businessman. He is the former executive
+  ID: 2 Max Emilian Verstappen (; born 30 September 1997) is a Dutch and Belgian racing driver, who competes
+  ID: 4 Syracuse University (informally 'Cuse or SU) is a private research university in Syracuse, New York,
+  ID: 8 Jennifer Grey (born March 26, 1960) is an American actress. She made her acting debut with the film 
+  ID: 6 Jodie Turner-Smith (born 7 September 1986) is a British actress. She made her feature film debut in 
+  ID: 1 Linda Edna Cardellini (born June 25, 1975) is an American actress. In television, she is known for h
+  ID: 9 The Lennon Sisters are an American vocal group that has been made up, at one time or another, of thr
+  ID: 5 Furman University is a private university in Greenville, South Carolina, United States. Founded in 1
+  ID: 3 Michael James Way (born September 10, 1980) is an American musician and songwriter, best known as th
+  ID: 7 Mikaela Mikey Madison Rosberg (born March 25, 1999) is an American actress. She began her career act
+  ID: 0 John Fitzgerald Kennedy (May 29, 1917 – November 22, 1963), also known as JFK, was the 35th presiden
