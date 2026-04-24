@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_11/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_11/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12207 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 43 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5918 ms
+  Thresholding: 5903 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 8 Rashida Leah Jones ( ; born February 25, 1976) is an American actress and filmmaker. She is best kno
+  ID: 3 Gregg Allan Wallace (born 17 October 1964) is an English broadcaster, entrepreneur and writer. He is
+  ID: 0 The CONMEBOL Libertadores, also known as Copa Libertadores de América (), is an annual continental c
+  ID: 2 Nutcrackers is a 2024 American comedy drama film directed by David Gordon Green, written by Leland D
+  ID: 1 Matt Eberflus ( ; born May 17, 1970) is an American professional football coach who is the defensive
+  ID: 9 Theodore John Kaczynski ( ; May 22, 1942 – June 10, 2023), also known as the Unabomber ( ), was an A
+  ID: 4 Dáil Éireann ( , ; ) is the lower house and principal chamber of the Oireachtas, which also includes
+  ID: 7 Alien is a science fiction horror and action media franchise centered on the original film series wh
+  ID: 5 The Piano Lesson is a 2024 American drama film directed by Malcolm Washington, who co-wrote the scre
+  ID: 6 Thiago Ezequiel Almada (born 26 April 2001) is an Argentine professional footballer who plays as an 

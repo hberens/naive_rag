@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_15/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_15/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12382 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 42 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5991 ms
+  Thresholding: 6003 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 3 Saoirse Una Ronan ( ; born 12 April 1994) is an American-born Irish actress. Primarily known for her
+  ID: 2 Publius Septimius Geta ( ; 7 March 189 – 26 December 211) was Roman emperor with his father Septimiu
+  ID: 7 Venky Atluri (born 6 April 1984) is an indian film director, screenwriter, and actor who works predo
+  ID: 6 The 2024 FIA Formula 2 Championship was a motor racing championship for Formula 2 cars sanctioned by
+  ID: 1 Lucky Baskhar (stylised as LUCKY BASKHA₹) is a 2024 Indian Telugu-language period crime drama film w
+  ID: 9 Viggo Peter Mortensen Jr. (; born October 20, 1958) is an American actor and filmmaker. He has recei
+  ID: 0 Xavier Restrepo (born April 22, 2002) is an American football wide receiver for the Miami Hurricanes
+  ID: 4 Scott Leo "Taye" Diggs (né Berry; born January 2, 1971) is an American actor. He is known for his ro
+  ID: 5 Tyler-Jay Dibling (born 17 February 2006) is an English professional footballer who plays as a midfi
+  ID: 8 Jonathan Daniel Hamm (born March 10, 1971) is an American actor. He is best known for his role as Do

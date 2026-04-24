@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_13/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_13/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12262 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 46 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5944 ms
+  Thresholding: 5916 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 5 Liam Rory Delap (born 8 February 2003) is an English professional footballer who plays as a forward 
+  ID: 2 Mathangi "Maya" Arulpragasam (; born 18 July 1975), known professionally as M.I.A. (; an initialism 
+  ID: 6 John Anthony Nicholas Gargano (born August 14, 1987) is an American professional wrestler. , he is s
+  ID: 9 Ready or Not is a 2019 American horror comedy film directed by Matt Bettinelli-Olpin and Tyler Gille
+  ID: 8 Sarah Christine Roemer (born August 28, 1984) is an American actress. One of her best-known roles wa
+  ID: 7 Daryl Joseph Mitchell (born 20 May 1991) is a New Zealand cricketer who plays all formats of the gam
+  ID: 4 Jason Raye Avant (born April 20, 1983) is an American former professional football player who was a 
+  ID: 0 The Wild Robot is a 2024 American animated science fiction film produced by DreamWorks Animation and
+  ID: 3 Daisy May Cooper (born 1 August 1986) is an English actress and writer. She won the 2018 BAFTA TV Aw
+  ID: 1 Anne W. Burrell (born September 21, 1969) is an American chef, television personality, and former in

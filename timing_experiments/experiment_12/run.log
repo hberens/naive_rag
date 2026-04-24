@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_12/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_12/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12286 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 46 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5936 ms
+  Thresholding: 5941 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 5 "Outlander" is a historical drama television series based on the "Outlander" series of historical ti
+  ID: 0 The Los Angeles Memorial Coliseum (also known as the Los Angeles Coliseum or L.A. Coliseum) is a mul
+  ID: 9 Jesse Woodson James (September 5, 1847April 3, 1882) was an American outlaw, bank and train robber, 
+  ID: 2 Talulah Jane Riley-Milburn (born 26 September 1985) is an English actress. She has appeared in films
+  ID: 1 Geoffrey Arnold Beck (24 June 194410 January 2023) was an English guitarist. He rose to prominence a
+  ID: 8 The Fall Guy is a 2024 American action comedy film directed by David Leitch and written by Drew Pear
+  ID: 4 Rilmenidine is a prescription medication for the treatment of hypertension. It is taken orally and m
+  ID: 7 The Social Democrats () are a social democratic political party in Ireland. Led by Holly Cairns sinc
+  ID: 6 Benjamin G. Whittaker (born 6 June 1997) is an English professional boxer who has held the IBF Inter
+  ID: 3 Alexander Nahuel Barboza Ullúa (born 16 March 1995) is a professional footballer who plays as a cent

@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_20/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_20/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12339 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 45 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 6025 ms
+  Thresholding: 5924 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 1 Jalen Oluwaseun Isaiah Milroe (born December 13, 2002) is an American football quarterback. He playe
+  ID: 8 Joey Lynn King (born July 30, 1999) is an American actress. She starred as Ramona Quimby in the come
+  ID: 9 Andrew Fetterly Wilkes-Krier (born May 9, 1979), known professionally as Andrew W.K., is an American
+  ID: 3 Wordle is a web-based word game created and developed by Welsh software engineer Josh Wardle. In the
+  ID: 2 Mary Nell Steenburgen (; born February 8, 1953) is an American actress, comedian, singer, and songwr
+  ID: 5 Naomi Scott (born 6 May 1993) is an English actress and singer. After featuring on the Disney Channe
+  ID: 4 Kneecap are an Irish hip hop trio from West Belfast, Northern Ireland, composed of Mo Chara, Móglaí 
+  ID: 6 Amaran () is a 2024 Indian Tamil-language biographical action war film written and directed by Rajku
+  ID: 0 Sunny Edwards (born 1 January 1996) is a British former professional boxer who held the Internationa
+  ID: 7 Yellowjackets is an American thriller drama television series created by Ashley Lyle and Bart Nicker

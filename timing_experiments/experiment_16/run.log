@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_16/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_16/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12391 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 44 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 6040 ms
+  Thresholding: 5961 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 9 Kiefer William Frederick Dempsey George Rufus Sutherland (born 21 December 1966) is a Canadian actor
+  ID: 6 Mary Anissa Jones (March 11, 1958 – August 28, 1976) was an American child actress known for her rol
+  ID: 3 Helen Folasade Adu ( ; born 16 January 1959), known professionally as Sade Adu or simply Sade ( or )
+  ID: 1 Kaya Rose Scodelario-Davis (née Humphrey; born 13 March 1992) is a British actress. She first came t
+  ID: 7 Rogers Arena is a multi-purpose arena at 800 Griffiths Way in the downtown area of Vancouver, Britis
+  ID: 4 George William Russell (; born 15 February 1998) is a British racing driver, who competes in Formula
+  ID: 8 Donald Trump assumed office as the 47th president of the United States on January20, 2025. The presi
+  ID: 5 James Nicholas Righton (born 25 August 1983) is an English musician. As well as singing, he was the 
+  ID: 0 Sheridan Taylor Gibler Jr. (born May 21, 1970), known professionally as Taylor Sheridan, is an Ameri
+  ID: 2 is a Japanese mixed martial artist currently competing in the Flyweight division of the Ultimate Fig

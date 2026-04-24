@@ -83,7 +83,7 @@ def plot_metric_subplots(
     rows: list[Row],
     *,
     output_path: Path,
-    title: str = "naive_rag timing metrics by experiment (10 x 10)",
+        title: str = "naive_rag timing metrics by experiment (20 × 10 vectors)",
 ) -> None:
     try:
         import matplotlib.pyplot as plt
@@ -96,7 +96,7 @@ def plot_metric_subplots(
     exp_ids = [r.experiment_id for r in rows]
     metrics = [
         ("Encrypted Total (ms)", [r.encrypted_total_ms for r in rows], "#4c78a8"),
-        ("Initialization (ms)", [r.initialization_ms for r in rows], "#f58518"),
+        ("Distance init (ms)", [r.initialization_ms for r in rows], "#f58518"),
         ("Distance Calc (ms)", [r.distance_calc_ms for r in rows], "#54a24b"),
         ("Threshold (ms)", [r.threshold_ms for r in rows], "#e45756"),
     ]
@@ -145,7 +145,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--title",
-        default="naive_rag timing metrics by experiment (10 x 10)",
+        default="naive_rag timing metrics by experiment (20 × 10 vectors)",
         help="Figure title.",
     )
     return p.parse_args()

@@ -35,9 +35,9 @@ size_t OpenFHEWrapper::computeRequiredDepth(size_t approach) {
       break;
 
     case 5: // naive packed inner product + Chebyshev threshold
-      // Mod-chain budget: EvalMult(ctE,ptD), EvalMult(ctInner,-2), EvalMult(ctDist,margin), then
-      // chebyshevCompare (sign Chebyshev + F4 poly). 
-      depth += 3;
+      // Mod-chain budget: EvalMult(ctE,ptD) with plaintext -2d, EvalMult(ctDist,-0.5), then
+      // chebyshevCompare (sign Chebyshev + F4 poly). No separate EvalMult(ctInner,-2).
+      depth += 2;
       depth += COMP_DEPTH;
       depth += 1; // to be safe
       break;

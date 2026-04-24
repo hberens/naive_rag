@@ -9,16 +9,16 @@ Generating key pair...
 Generating mult keys... 
 Generating sum keys... 
 Generating rotation keys... 
-CKKS scheme set up (depth = 21, batch size = 32768)
+CKKS scheme set up (depth = 11, batch size = 16384)
 Configured DB size: 10
-Distance threshold: 0.61
+Distance threshold (d^2): 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 54894 ms
-  Initialization (query encrypt + query/db squaring + -2 vector prep): 137 ms
-  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): 316 ms
-  Thresholding: 34117 ms
+  Running total (start -> encrypted output): 12387 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 46 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5909 ms
+  Thresholding: 6076 ms
 Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0

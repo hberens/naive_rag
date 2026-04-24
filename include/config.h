@@ -5,8 +5,12 @@
 
 #include <string>
 
-// Similarity threshold for matches
+// Similarity threshold for matches (optional analyses; not used by main d^2 rule)
 const double MATCH_THRESHOLD = 0.70;
+
+// Squared L2 threshold: plaintext uses d^2 < SQ_DISTANCE_THRESHOLD; encrypted uses the
+// equivalent sim cutoff (nextafter(1 - T/2, ...)) so both paths match.
+const double SQ_DISTANCE_THRESHOLD = 0.61;
 
 // Depth to be consumed by the comparison approximation function
 // Relationship with multiplicative depth described at the below link

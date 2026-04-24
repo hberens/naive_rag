@@ -1,0 +1,44 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_17/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_17/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12354 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 43 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 6014 ms
+  Thresholding: 5960 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 2 Mary Ruth Maxted (née Quilter; 30 November 1945 – 19 August 1979), known professionally as Mary Mill
+  ID: 5 Lucy Helyn Deakins (born December 18, 1971) is an American attorney and former actress best known fo
+  ID: 1 Otto Adolf Eichmann ( ; ; 19 March 1906 – 1 June 1962) was a German-Austrian official of the Nazi Pa
+  ID: 4 The Nut Cracker is a 1920 comedy novel by the American writer Frederic S. Isham. It was publisher by
+  ID: 7 The Sylacauga meteorite fell on November 30, 1954, at 12:46 p.m. local time (18:46 UT) in Oak Grove,
+  ID: 6 Jaten Collin Dimsdale (born September 25, 1992), also known by his stage name Teddy Swims, is an Ame
+  ID: 3 Here is a 2024 American drama film produced and directed by Robert Zemeckis, who co-wrote the screen
+  ID: 0 The World Chess Championship 2024 was a chess match between the reigning world champion Ding Liren a
+  ID: 8 Mouthwashing is a 2024 horror adventure game developed by Wrong Organ and published by Critical Refl

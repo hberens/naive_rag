@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_18/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_18/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12309 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 42 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5966 ms
+  Thresholding: 5961 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 1 Aileen Carol Wuornos (; born Pittman; February 29, 1956 – October 9, 2002) was an American serial ki
+  ID: 8 This is a list of college football bowl games, including those proposed and defunct. Six bowl games 
+  ID: 3 Shane Michael Gillis (born December 11, 1987) is an American stand-up comedian, actor, and podcaster
+  ID: 2 Robert Francis Kennedy (November 20, 1925 – June 6, 1968), also known as RFK, was an American politi
+  ID: 7 Kimberly Ann Guilfoyle ( ; born March 9, 1969) is an American television news personality and former
+  ID: 5 Joseph Andrew Starkey (born November 4, 1993) is an American actor. He began his career with support
+  ID: 4 Luiz Henrique André Rosa da Silva (born 2 January 2001) is a Brazilian professional footballer who p
+  ID: 0 Ian Michael Harding is an American actor. He is best known for his role as Ezra Fitz in the Freeform
+  ID: 6 Charli Grace D'Amelio ( ; born May 1, 2004) is an American social media personality and dancer. She 
+  ID: 9 Castle Knob is the motte (artificial hill) of Castle Gresley, a ruined motte and bailey castle in De

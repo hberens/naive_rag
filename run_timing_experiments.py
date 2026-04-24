@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
 
-'''LD_PRELOAD=/usr/local/lib/libOPENFHEpke.so.1.2.3:/usr/local/lib/libOPENFHEcore.so.1.2.3:/usr/local/lib/libOPENFHEbinfhe.so.1.2.3 \
-~/.local/bin/micromamba run -n naive_rag \
-python run_timing_experiments.py \
-  --experiments 5 \
-  --set-size 10 \
-  --index ./index_1000.faiss \
-  --database ./index_1000.csv \
-  --query ./query_embedding.txt \
-  --output-dir ./timing_experiments'''
+'''
+Timing sweep (default: 20 experiments × 10 vectors = 200 vector evaluations for CSV + plots):
+
+  micromamba run -n naive_rag python run_timing_experiments.py --clean-output
+
+Single 200-vector accuracy check (distances + threshold agreement in project root outputs):
+
+  ./cmake-build-local/naive_rag query_embedding.txt index_1000.faiss index_1000.csv 200
+  micromamba run -n naive_rag python compare_thresholds_from_distances.py
+
+Plot after timing:
+
+  micromamba run -n naive_rag python plot_timing_results.py
+
+OpenFHE: if naive_rag fails with exit 127 (EvalChebyshevFunction), rebuild against your
+installed OpenFHE or set --openfhe-ld-preload / OPENFHE_LD_PRELOAD to matching .so paths.
+Auto-preload of 1.2.4 under /usr/local/lib is applied when present (see --help).
+'''
 
 import argparse
 import csv
@@ -25,12 +34,19 @@ import numpy as np
 
 
 TIMING_PATTERNS = {
-    "encrypted_total_ms": re.compile(r"Running total \(start -> encrypted output\): (\d+) ms"),
+    "encrypted_total_ms": re.compile(
+        r"Running total (?:\(start -> encrypted output\)|\(encrypted start -> last encrypted output file\)): (\d+) ms"
+    ),
     "initialization_ms": re.compile(
-        r"Initialization \(query encrypt \+ query/db squaring \+ -2 vector prep\): (\d+) ms"
+        r"(?:Distance initialization \(squaring, query encrypt, ptE2Slots, -2d DB prep\)"
+        r"|Initialization \(encrypted: query encrypt \+ ptE2Slots\)"
+        r"|Initialization \(query encrypt \+ query/db squaring(?: \+ -2 vector prep|; -2d applied in plaintext per DB vector)\))"
+        r": (\d+) ms"
     ),
     "distance_calc_ms": re.compile(
-        r"Distance calculation \(-2<d,e> \+ d\^2 \+ e\^2, no sq/encrypt/decrypt\): (\d+) ms"
+        r"Distance calculation (?:\(-2<d,e> \+ d\^2 \+ e\^2, no sq/encrypt/decrypt\)"
+        r"|\(<e,-2d> sum \+ d\^2 \+ e\^2, no decrypt\)"
+        r"|\(HE EvalMult\+sumAllSlots\+EvalAdds for d\^2\)): (\d+) ms"
     ),
     "threshold_ms": re.compile(r"Thresholding: (\d+) ms"),
     "threshold_agreement": re.compile(r"Threshold agreement: (\d+) / (\d+) \(([\d.]+)%\)"),
@@ -38,12 +54,17 @@ TIMING_PATTERNS = {
     "vector_count": re.compile(r"Number of vectors: (\d+)"),
     "vector_dimension": re.compile(r"Dimension: (\d+)"),
     "configured_db_size": re.compile(r"Configured DB size: (\d+)"),
-    "distance_threshold": re.compile(r"Distance threshold: ([\d.]+)"),
+    "distance_threshold": re.compile(
+        r"Distance threshold(?: \([^)]+\))?: ([\d.]+)"
+    ),
 }
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run repeated 10-vector timing experiments for naive_rag."
+        description=(
+            "Run naive_rag timing experiments. Defaults: --experiments 20 --set-size 10 "
+            "(20 disjoint sets of 10 vectors = 200 vector evaluations per sweep)."
+        ),
     )
     parser.add_argument(
         "--binary",
@@ -73,14 +94,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--experiments",
         type=int,
-        default=10,
+        default=20,
         help="Number of experiments to run.",
     )
     parser.add_argument(
         "--set-size",
         type=int,
         default=10,
-        help="Number of vectors per experiment.",
+        help="Vectors per experiment (e.g. 20×10=200 total evaluations, or --experiments 1 --set-size 200).",
     )
     parser.add_argument(
         "--pool-size",
@@ -105,7 +126,75 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Delete existing experiment_* folders in output dir before running.",
     )
+    parser.add_argument(
+        "--no-openfhe-usr-local-ld-prepend",
+        action="store_true",
+        help=(
+            "Do not prepend /usr/local/lib to LD_LIBRARY_PATH for naive_rag. "
+            "Useful if you rely on conda-provided OpenFHE only."
+        ),
+    )
+    parser.add_argument(
+        "--openfhe-ld-preload",
+        type=str,
+        default=None,
+        help=(
+            "Colon-separated list for LD_PRELOAD (e.g. three libOPENFHE*.so.1.2.4 paths). "
+            "If unset, uses env OPENFHE_LD_PRELOAD when set; else auto-loads 1.2.4 triple under "
+            "/usr/local/lib when those files exist (matches naive_rag built against OpenFHE 1.2.x "
+            "while libOPENFHEpke.so.1 may symlink to 1.3.x)."
+        ),
+    )
+    parser.add_argument(
+        "--no-openfhe-auto-ld-preload",
+        action="store_true",
+        help="Disable automatic LD_PRELOAD of OpenFHE 1.2.4 libs from /usr/local/lib.",
+    )
     return parser.parse_args()
+
+
+def _default_openfhe_124_preload() -> str | None:
+    """OpenFHE 1.2.4 .so paths if all present (ABI matches typical cmake-built naive_rag)."""
+    triple = [
+        "/usr/local/lib/libOPENFHEpke.so.1.2.4",
+        "/usr/local/lib/libOPENFHEcore.so.1.2.4",
+        "/usr/local/lib/libOPENFHEbinfhe.so.1.2.4",
+    ]
+    if all(Path(p).is_file() for p in triple):
+        return ":".join(triple)
+    return None
+
+
+def subprocess_env_for_naive_rag(
+    base: dict[str, str],
+    *,
+    prepend_usr_local_openfhe: bool,
+    openfhe_ld_preload: str | None,
+    no_openfhe_auto_ld_preload: bool,
+) -> dict[str, str]:
+    env = dict(base)
+
+    preload = openfhe_ld_preload
+    if preload is None:
+        preload = env.get("OPENFHE_LD_PRELOAD", "").strip() or None
+    if preload is None and not no_openfhe_auto_ld_preload:
+        preload = _default_openfhe_124_preload()
+    if preload:
+        existing = env.get("LD_PRELOAD", "").strip()
+        env["LD_PRELOAD"] = f"{preload}:{existing}" if existing else preload
+
+    # Prepend /usr/local/lib only when not using LD_PRELOAD for OpenFHE: mixing
+    # LD_LIBRARY_PATH (often resolving libOPENFHEpke.so.1 -> 1.3.x) with 1.2.4 preload
+    # can crash (mixed ABI). With preload, conda/micromamba env paths still apply for faiss.
+    if prepend_usr_local_openfhe and not preload:
+        usrlocal = Path("/usr/local/lib")
+        pke = usrlocal / "libOPENFHEpke.so.1"
+        if usrlocal.is_dir() and pke.exists():
+            prefix = str(usrlocal.resolve())
+            prev = env.get("LD_LIBRARY_PATH", "").strip()
+            env["LD_LIBRARY_PATH"] = f"{prefix}:{prev}" if prev else prefix
+
+    return env
 
 
 def read_database_lines(path: Path) -> list[str]:
@@ -150,6 +239,9 @@ def require_metrics(metrics: dict[str, float | int], experiment_id: int, log_pat
         "vector_dimension",
         "configured_db_size",
         "distance_threshold",
+        "threshold_agreement_matches",
+        "threshold_agreement_total",
+        "threshold_accuracy_percent",
     )
     missing = [key for key in required if key not in metrics]
     if missing:
@@ -228,13 +320,19 @@ def main() -> int:
             str(query_path),
             str(subset_index_path),
             str(subset_database_path),
+            str(args.set_size),
         ]
         completed = subprocess.run(
             command,
             cwd=run_dir,
             text=True,
             capture_output=True,
-            env=os.environ.copy(),
+            env=subprocess_env_for_naive_rag(
+                os.environ.copy(),
+                prepend_usr_local_openfhe=not args.no_openfhe_usr_local_ld_prepend,
+                openfhe_ld_preload=args.openfhe_ld_preload,
+                no_openfhe_auto_ld_preload=args.no_openfhe_auto_ld_preload,
+            ),
             check=False,
         )
 

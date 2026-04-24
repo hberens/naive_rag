@@ -9,6 +9,7 @@
 #include <iostream>
 #include <numeric>
 #include <stdexcept>
+#include <string>
 
 #include "utils.cpp"
 #include "include/client.h"
@@ -36,14 +37,26 @@ void padPackedSlots(std::vector<double> &v, size_t batchSize) {
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 int main(int argc, char *argv[]) {
 
-    if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <embedding_file> <faiss_file> <db_file>" << std::endl;
+    if (argc < 4 || argc > 5) {
+        std::cerr << "Usage: " << argv[0]
+                  << " <embedding_file> <faiss_file> <db_file> [max_vectors]\n"
+                  << "  max_vectors: cap on DB vectors to process (default 200; 0 = all)\n";
         return 1;
     }
 
     std::string embedding_file = argv[1];
     std::string faiss_file = argv[2];
     std::string database_file = argv[3];
+
+    size_t kMaxDbVectors = 200;
+    if (argc == 5) {
+        try {
+            kMaxDbVectors = static_cast<size_t>(std::stoull(argv[4]));
+        } catch (const std::exception &) {
+            std::cerr << "Invalid max_vectors (need non-negative integer): " << argv[4] << "\n";
+            return 1;
+        }
+    }
 
     std::cout << "Embedding file: " << embedding_file << std::endl;
     std::cout << "Faiss file: " << faiss_file << std::endl;
@@ -130,13 +143,12 @@ int main(int argc, char *argv[]) {
 
     cout << "CKKS scheme set up (depth = " << multDepth << ", batch size = " << batchSize << ")" << endl;
 
-    // Set up database size - 100 for texting 
-    const size_t kMaxDbVectors = 50;
     const size_t db_size = (kMaxDbVectors == 0) ? embedding_database.size()
                                                 : std::min(kMaxDbVectors, embedding_database.size());
     std::cout << "Configured DB size: " << db_size << std::endl;
     using Clock = std::chrono::steady_clock;
-    std::chrono::nanoseconds initDuration(0);
+    std::chrono::nanoseconds plaintextSquaresDuration(0);
+    std::chrono::nanoseconds encryptedInitDuration(0);
 
     /// PLAINTEXT APPROACH
     const auto initSquaresStart = Clock::now();
@@ -145,7 +157,7 @@ int main(int argc, char *argv[]) {
     for (size_t i = 0; i < db_size; i++) {
         square_embedding_database[i] = square(embedding_database[i]);
     }
-    initDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+    plaintextSquaresDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
         Clock::now() - initSquaresStart);
 
     std::vector<float> plaintext_distances(db_size);
@@ -166,29 +178,18 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // plaintext thresholding
-    // Compare in similarity space for clearer threshold semantics:
-    // sim = 1 - (d^2 / 2), then sim >= MATCH_THRESHOLD.
-    double kSqDistanceThreshold = 2.0 * (1.0 - MATCH_THRESHOLD);
-    if (kSqDistanceThreshold < 0.0) {
-        kSqDistanceThreshold = 0.0;
-    } else if (kSqDistanceThreshold > 4.0) {
-        kSqDistanceThreshold = 4.0;
-    }
-    std::cout << "Similarity threshold: " << MATCH_THRESHOLD << std::endl;
-    std::cout << "Distance threshold: " << kSqDistanceThreshold << std::endl;
-    std::vector<float> plaintext_similarity_scores(db_size);
+    // plaintext thresholding (same SQ_DISTANCE_THRESHOLD as encrypted Chebyshev rule)
+    const double kSqDistanceThreshold = SQ_DISTANCE_THRESHOLD;
+    std::cout << "Distance threshold (d^2): " << kSqDistanceThreshold << std::endl;
+    // Encrypted path compares sim = 1 - d^2/2 with >= on a cutoff; that is d^2 <= T.
+    // Plaintext uses strict d^2 < T, so use nextafter so sim >= cutoff matches d^2 < T
+    // at the boundary (excluding d^2 == T).
+    const double kSimilarityForStrictLessOnD2 =
+        std::nextafter(1.0 - 0.5 * kSqDistanceThreshold, 2.0);
     std::vector<float> plaintext_threshold_bits(db_size);
     for (size_t i = 0; i < db_size; i++) {
-        double similarity = 1.0 - static_cast<double>(plaintext_distances[i]) / 2.0;
-        if (similarity < -1.0) {
-            similarity = -1.0;
-        } else if (similarity > 1.0) {
-            similarity = 1.0;
-        }
-        plaintext_similarity_scores[i] = static_cast<float>(similarity);
         plaintext_threshold_bits[i] =
-            static_cast<double>(plaintext_similarity_scores[i]) >= MATCH_THRESHOLD ? 1.0f : 0.0f;
+            static_cast<double>(plaintext_distances[i]) < kSqDistanceThreshold ? 1.0f : 0.0f;
     }
     // add to file 
     {
@@ -216,14 +217,30 @@ int main(int argc, char *argv[]) {
     const double e2_plain = static_cast<double>(square_query_embedding);
     Plaintext ptE2Slots = cc->MakeCKKSPackedPlaintext(std::vector<double>(batchSize, e2_plain));
 
-    // Encrypt -2 vector 
     std::vector<float> distances(db_size);
-    Plaintext ptMinusTwo = cc->MakeCKKSPackedPlaintext(std::vector<double>(batchSize, -2.0));
     std::vector<Ciphertext<DCRTPoly>> ctDistances(db_size);
-    initDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+    encryptedInitDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
         Clock::now() - initEncryptedSetupStart);
 
-    std::chrono::nanoseconds distanceCoreDuration(0);
+    // Packed plaintext -2d for every DB vector (timed as part of distance initialization).
+    std::vector<std::vector<double>> neg2_db_packed(db_size);
+    const auto neg2DatabasePrepStart = Clock::now();
+    for (size_t i = 0; i < db_size; i++) {
+        std::vector<double> d_vec_d(embedding_database[i].begin(), embedding_database[i].end());
+        for (double &x : d_vec_d) {
+            x *= -2.0;
+        }
+        padPackedSlots(d_vec_d, batchSize);
+        neg2_db_packed[i] = std::move(d_vec_d);
+    }
+    const std::chrono::nanoseconds neg2DatabasePrepDuration =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - neg2DatabasePrepStart);
+
+    // Distance HE: "inner" = packed EvalMult + sumAllSlots (dominant cost). "tail" = plain ||d||^2
+    // slot + two EvalAdd to finish d^2. Older timing only measured the tail after sumAllSlots
+    // (plus a separate EvalMult by -2), so historical "Distance calculation" logs looked tiny.
+    std::chrono::nanoseconds distanceInnerDuration(0);
+    std::chrono::nanoseconds distanceTailDuration(0);
     for (size_t i = 0; i < db_size; i++) {
 
         // printing progress for testing
@@ -231,29 +248,26 @@ int main(int argc, char *argv[]) {
             std::cout << "Processing vector " << i << " / " << db_size << std::endl;
         }
         
-        // encode database vectors in plaintext
-        std::vector<double> d_vec_d(embedding_database[i].begin(), embedding_database[i].end());
-        padPackedSlots(d_vec_d, batchSize);
-        Plaintext ptD = cc->MakeCKKSPackedPlaintext(d_vec_d);
+        // Prepacked -2d from initialization (EvalMult(ctE, pt) => slotwise e*(-2d)).
+        Plaintext ptD = cc->MakeCKKSPackedPlaintext(neg2_db_packed[i]);
 
-        // encrypted inner product <e, d>- componentwise multiply
+        const auto distanceInnerStart = Clock::now();
+        // <e, -2d> via packed multiply + slot sum (same as -2<e,d>)
         Ciphertext<DCRTPoly> ctED = cc->EvalMult(ctE, ptD);
-        // sum all slots for inner product 
-        Ciphertext<DCRTPoly> ctInner = OpenFHEWrapper::sumAllSlots(cc, ctED);
+        Ciphertext<DCRTPoly> ctNeg2Inner = OpenFHEWrapper::sumAllSlots(cc, ctED);
+        distanceInnerDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+            Clock::now() - distanceInnerStart);
 
-        // -2<e,d>
-        const auto distanceCoreStart = Clock::now();
-        Ciphertext<DCRTPoly> ctMinus2Inner = cc->EvalMult(ctInner, ptMinusTwo);
-
+        const auto distanceTailStart = Clock::now();
         // (||d||^2) as plaintext replicated across slots
         const double d2 = static_cast<double>(square_embedding_database[i]);
         Plaintext ptD2 = cc->MakeCKKSPackedPlaintext(std::vector<double>(batchSize, d2));
 
         // Distance^2 = ||d||^2 + ||e||^2 - 2<e,d>
-        Ciphertext<DCRTPoly> ctDist = cc->EvalAdd(ctMinus2Inner, ptD2);
+        Ciphertext<DCRTPoly> ctDist = cc->EvalAdd(ctNeg2Inner, ptD2);
         ctDist = cc->EvalAdd(ctDist, ptE2Slots);
-        distanceCoreDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
-            Clock::now() - distanceCoreStart);
+        distanceTailDuration += std::chrono::duration_cast<std::chrono::nanoseconds>(
+            Clock::now() - distanceTailStart);
         ctDistances[i] = ctDist;
 
         // decrypt distance^2
@@ -277,22 +291,23 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Chebyshev thresholding in similarity space (same decision rule as plaintext):
-    // sim = 1 - (d^2 / 2), compare sim against MATCH_THRESHOLD.
+    // Chebyshev thresholding in similarity space (same decision rule as plaintext d^2 < T):
+    // sim = 1 - (d^2 / 2); compare sim >= nextafter(1 - T/2, ...) <=> d^2 < T.
     const auto thresholdStart = Clock::now();
     std::vector<Ciphertext<DCRTPoly>> distanceThresholds(db_size);
     for (size_t i = 0; i < db_size; i++) {
         Ciphertext<DCRTPoly> ctSimilarity = cc->EvalMult(ctDistances[i], -0.5);
         cc->EvalAddInPlace(ctSimilarity, 1.0);
 
-        // step ≈ 0 if sim < MATCH_THRESHOLD, else ≈ 2
-        Ciphertext<DCRTPoly> ctStep =
-            OpenFHEWrapper::chebyshevCompare(cc, ctSimilarity, MATCH_THRESHOLD, COMP_DEPTH);
+        Ciphertext<DCRTPoly> ctStep = OpenFHEWrapper::chebyshevCompare(
+            cc, ctSimilarity, kSimilarityForStrictLessOnD2, COMP_DEPTH);
         distanceThresholds[i] = ctStep;
     }
     const auto thresholdEnd = Clock::now();
 
-    // decrypt the thresholds to read them to check results (soft value ≈ 0 or ≈ 2 before hard cut)
+    // chebyshevCompare targets ~0 or ~2 after +1; bit = v>1. That is the ideal; decrypted values are
+    // not exact 0/2 (polynomial + CKKS error). Similarity is computed in ciphertext, so it can
+    // disagree with an exact sim from float d^2 even when distances[i] matches plaintext.
     std::vector<float> distanceThresholdsPT(db_size);
     for (size_t i = 0; i < db_size; i++) {
         Plaintext ptInd;
@@ -300,8 +315,8 @@ int main(int argc, char *argv[]) {
         ptInd->SetLength(1);
 
         const auto vals = ptInd->GetRealPackedValue();
-        const double v = vals.empty() ? 0.0 : vals[0];
-        distanceThresholdsPT[i] = static_cast<float>(v > 1.0 ? 1.0 : 0.0);
+        const double v = vals.empty() ? 0.0 : static_cast<double>(vals[0]);
+        distanceThresholdsPT[i] = static_cast<float>(v > 1.0 ? 1.0f : 0.0f);
     }
 
     // save encrypted thresholds to file
@@ -317,20 +332,49 @@ int main(int argc, char *argv[]) {
     }
     const auto encryptedTotalEnd = Clock::now();
 
-    const auto initMs =
-        std::chrono::duration_cast<std::chrono::milliseconds>(initDuration).count();
+    const std::chrono::nanoseconds distanceInitializationDuration =
+        plaintextSquaresDuration + encryptedInitDuration + neg2DatabasePrepDuration;
+    const auto distanceInitMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(distanceInitializationDuration).count();
+    const auto plaintextSquaresMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(plaintextSquaresDuration).count();
+    const auto encryptedInitMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(encryptedInitDuration).count();
+    const auto neg2DatabasePrepMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(neg2DatabasePrepDuration).count();
+    const std::chrono::nanoseconds distanceCoreDuration = distanceInnerDuration + distanceTailDuration;
     const auto distanceCalcMs =
         std::chrono::duration_cast<std::chrono::milliseconds>(distanceCoreDuration).count();
+    const auto distanceInnerMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(distanceInnerDuration).count();
+    const auto distanceTailMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(distanceTailDuration).count();
     const auto thresholdMs =
         std::chrono::duration_cast<std::chrono::milliseconds>(thresholdEnd - thresholdStart).count();
     const auto encryptedTotalMs =
         std::chrono::duration_cast<std::chrono::milliseconds>(encryptedTotalEnd - encryptedTotalStart).count();
+    const auto encryptedThroughHomomorphicThresholdMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(thresholdEnd - encryptedTotalStart).count();
 
     std::cout << "\nTiming summary (encrypted pipeline)\n";
-    std::cout << "  Running total (start -> encrypted output): " << encryptedTotalMs << " ms\n";
-    std::cout << "  Initialization (query encrypt + query/db squaring + -2 vector prep): " << initMs << " ms\n";
-    std::cout << "  Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt): " << distanceCalcMs << " ms\n";
+    std::cout << "  Distance initialization (squaring, query encrypt, ptE2Slots, -2d DB prep): "
+              << distanceInitMs << " ms\n";
+    std::cout << "    breakdown ms -- squaring: " << plaintextSquaresMs
+              << ", query encrypt+ptE2Slots: " << encryptedInitMs << ", -2d pack all DB: "
+              << neg2DatabasePrepMs << "\n";
+    std::cout << "  Running total (encrypted start -> last encrypted output file): " << encryptedTotalMs
+              << " ms\n";
+    std::cout << "    (includes distance ct decrypts, homomorphic threshold, threshold decrypt, I/O)\n";
+    std::cout << "  Encrypted wall-clock through homomorphic threshold end: "
+              << encryptedThroughHomomorphicThresholdMs << " ms\n";
+    std::cout << "    (encrypted start -> after Chebyshev; incl. HE distances, distance decrypts, "
+                 "distances.txt; excludes threshold ct decrypt and later)\n";
+    std::cout << "  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): " << distanceCalcMs
+              << " ms\n";
+    std::cout << "    (inner EvalMult + sumAllSlots: " << distanceInnerMs
+              << " ms; tail adds for d^2: " << distanceTailMs << " ms)\n";
     std::cout << "  Thresholding: " << thresholdMs << " ms\n";
+    std::cout << "    (homomorphic only: sim transform + Chebyshev; excludes threshold decrypt and 0/1 cut)\n";
 
     // Compare plaintext vs encrypted threshold bits
     size_t threshold_matches = 0;
@@ -385,24 +429,10 @@ int main(int argc, char *argv[]) {
 //  Also, you can try interactive lessons for CLion by selecting
 //  'Help | Learn IDE Features' from the main menu.
 
-// Timing metric:
-// 1) Running total (start -> encrypted output):
-//    Starts at encryptedTotalStart and ends at encryptedTotalEnd.
-//    Includes encrypted initialization, distance loop, threshold compute,
-//    threshold decrypt/hard-cut, and writing encrypted_thresholds.txt.
-//
-// 2) Initialization (query encrypt + query/db squaring + -2 vector prep):
-//    Accumulated initDuration from:
-//      - query and database squaring (square_query_embedding, square_embedding_database)
-//      - encrypted setup (query pack/encrypt, ptE2Slots, ptMinusTwo, pre-loop allocations)
-//
-// 3) Distance calculation (-2<d,e> + d^2 + e^2, no sq/encrypt/decrypt):
-//    Accumulated distanceCoreDuration inside the per-vector loop from
-//    right before EvalMult(ctInner, ptMinusTwo) through the two EvalAdd
-//    calls building ctDist
-//
-// 4) Thresholding:
-//    Starts at thresholdStart and ends at thresholdEnd
-//    Includes encrypted margin + Chebyshev compare + scaling by 0.5
-//    Excludes decrypting threshold ciphertexts and hard thresholding to 0/1
-
+// Timing metrics (see printed "Timing summary"):
+// - Distance initialization (CSV column initialization_ms): squaring query+DB, encrypt query + ptE2Slots,
+//   and packing -2*d for every DB vector (plaintext) before the HE distance inner loop.
+// - Running total: encryptedTotalEnd - encryptedTotalStart (full encrypted pipeline incl. decrypts+I/O).
+// - Encrypted through homomorphic threshold end: thresholdEnd - encryptedTotalStart.
+// - Distance calculation (CSV): inner EvalMult+sumAllSlots + tail adds (excl. distance decrypt).
+// - Thresholding (CSV): thresholdEnd - thresholdStart (homomorphic only).

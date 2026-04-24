@@ -1,0 +1,44 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_19/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_19/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12259 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 44 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5932 ms
+  Thresholding: 5946 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 3 Jacoba Francisca Maria "Cobie" Smulders (born April 3, 1982) is a Canadian actress. She is known for
+  ID: 2 The 2025 Canadian federal election will be held on April 28 to elect members of the House of Commons
+  ID: 0 Rudolf, Crown Prince of Austria (Rudolf Franz Karl Josef; 21 August 1858 – 30 January 1889) was the 
+  ID: 6 Survivor 47 is the forty-seventh season of the American competitive reality television series "Survi
+  ID: 5 Gabriel dos Santos Magalhães (; born 19 December 1997), also simply known as Gabriel, is a Brazilian
+  ID: 7 Annabel Claire Giles (20 May 1959 – 20 November 2023) was a British television and radio presenter. 
+  ID: 8 Maura Therese Tierney (born February 3, 1965) is an American actress. She is best known for her role
+  ID: 1 Cristin Milioti (born August 16, 1985) is an American actress. She is known for playing Tracy McConn
+  ID: 4 Wardell Stephen Curry II ( ; born March 14, 1988) is an American professional basketball player and 

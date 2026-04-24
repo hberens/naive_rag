@@ -1,0 +1,45 @@
+Embedding file: /home/hberens/openfhe/naive_rag/query_embedding.txt
+Faiss file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_14/subset.faiss
+Database file: /home/hberens/openfhe/naive_rag/timing_experiments/experiment_14/subset.csv
+Index loaded successfully!
+Number of vectors: 10
+Dimension: 768
+Is trained: yes
+Generating key pair... 
+Generating mult keys... 
+Generating sum keys... 
+Generating rotation keys... 
+CKKS scheme set up (depth = 11, batch size = 16384)
+Configured DB size: 10
+Distance threshold (d^2): 0.61
+Processing vector 0 / 10
+
+Timing summary (encrypted pipeline)
+  Running total (start -> encrypted output): 12325 ms
+  Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 41 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5959 ms
+  Thresholding: 5982 ms
+Threshold agreement: 10 / 10 (100%)
+Number of solutions 0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+Top 10 nearest neighbors:
+  ID: 7 Judy Reyes (born November 5, 1967) is an American actress, model, and producer, best known for her r
+  ID: 0 Kayleigh Rose Amstutz (born February 19, 1998), known professionally as Chappell Roan ( ), is an Ame
+  ID: 1 The Syrian Interim Government (Arabic: الحكومة السورية المؤقتة; "Ḥukūmat as-Sūriyya al-Muwaqqata") w
+  ID: 4 Kristen Anne Bell (born July 18, 1980) is an American actress, singer, and producer. She began her a
+  ID: 2 Damascus ( , ; ) is the capital and largest city of Syria. It is the oldest capital in the world and
+  ID: 8 Ryan Alexander Coleman Williams Jr. (born February 9, 2007) is an American football wide receiver fo
+  ID: 9 William Keith Relf (22 March 194312 May 1976) was an English musician, best known as the lead vocali
+  ID: 5 Isabella Fiorella Elettra Giovanna Rossellini (; born 18 June 1952) is an Italian actress and model.
+  ID: 3 Timothy Alan Dick (born June 13, 1953), known professionally as Tim Allen, is an American actor and 
+  ID: 6 The family of Donald Trump, the 45th and 47th president of the United States and owner of the Trump 

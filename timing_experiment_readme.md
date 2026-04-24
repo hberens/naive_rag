@@ -1,4 +1,4 @@
-# Timing Experiments (10 sets x 10 vectors)
+# Timing Experiments (default: 20 sets × 10 vectors)
 
 ## What these tests do
 
@@ -17,7 +17,7 @@
   - `selected_indices` for each experiment
 
 Default experiment layout:
-- **10 experiments**
+- **20 experiments**
 - **10 vectors per experiment**
 - Drawn from the first **1000 vectors**
 
@@ -26,26 +26,24 @@ Default experiment layout:
 These definitions come from how timing is instrumented in `main.cpp`.
 
 - `encrypted_total_ms`
-  - Measures end-to-end encrypted pipeline time.
-  - Starts right before encrypted query setup and ends after encrypted thresholds are written.
-  - Includes encrypted initialization, encrypted distance computation, encrypted thresholding, threshold decrypt/hard-cut, and writing `encrypted_thresholds.txt`.
+  - Wall clock from `encryptedTotalStart` (start of encrypted section, after plaintext) to `encryptedTotalEnd`.
+  - Includes encrypted query setup, HE distance loop **including** per-vector distance decrypts (for `distances.txt`), writing `distances.txt`, homomorphic thresholding, threshold ciphertext decrypt, hard cut, and writing `encrypted_thresholds.txt`.
+  - **Excludes** all plaintext distance/threshold work before `encryptedTotalStart`.
 
-- `initialization_ms`
-  - Measures one-time setup work before the heavy encrypted per-vector math.
-  - Includes:
-    - plaintext squaring of query and db vectors (`square_query_embedding`, `square_embedding_database`)
-    - encrypted setup (`ctE`, `ptE2Slots`, `ptMinusTwo`, pre-loop allocations)
-  - Does **not** include full per-vector distance or threshold loop work.
+- `initialization_ms` (log line: **Distance initialization …**)
+  - **Squaring** query and every DB vector (`square_query_embedding`, `square_embedding_database`).
+  - **Encrypt query** (`ctE`) and **ptE2Slots** (`||e||^2` replicated in plaintext slots).
+  - **Pack `-2*d`** for every database vector (double vectors padded to batch size), before the HE distance loop.
+  - **Does not** include the homomorphic inner-product / `sumAllSlots` work (see `distance_calc_ms`).
 
 - `distance_calc_ms`
-  - Measures the core encrypted distance expression inside the per-vector loop.
-  - Specifically tracks `-2<e,d> + ||d||^2 + ||e||^2` construction.
-  - Excludes separate setup/squaring/encryption work and excludes decrypting distance ciphertexts.
+  - Per-vector HE only: packed `EvalMult` + `sumAllSlots` (inner) plus plaintext `||d||^2` slot and two `EvalAdd` (tail) to form `ctDist`.
+  - **Excludes** decrypting distance ciphertexts (those sit in the encrypted wall-clock / running total, not this bucket).
 
 - `threshold_ms`
-  - Measures encrypted threshold comparison stage (`chebyshevCompare` path).
-  - Includes encrypted margin formation and compare/scale operations.
-  - Excludes decrypting threshold ciphertexts and converting soft values to final 0/1 bits.
+  - Homomorphic thresholding only: from `thresholdStart` to `thresholdEnd` in `main.cpp`.
+  - Per vector: similarity `sim = 1 - d^2/2` (encrypted mult + add) then `chebyshevCompare`.
+  - Stops **before** any `Decrypt` on threshold ciphertexts and before the soft-value → 0/1 cut.
 
 ## Files
 
