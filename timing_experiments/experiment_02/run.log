@@ -15,10 +15,10 @@ Distance threshold (d^2): 0.61
 Processing vector 0 / 10
 
 Timing summary (encrypted pipeline)
-  Running total (start -> encrypted output): 12211 ms
+  Running total (start -> encrypted output): 12345 ms
   Initialization (query encrypt + query/db squaring; -2d applied in plaintext per DB vector): 43 ms
-  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 5901 ms
-  Thresholding: 5925 ms
+  Distance calculation (<e,-2d> sum + d^2 + e^2, no decrypt): 6022 ms
+  Thresholding: 5940 ms
 Threshold agreement: 10 / 10 (100%)
 Number of solutions 0
 0
